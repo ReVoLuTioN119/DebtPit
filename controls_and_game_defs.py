@@ -82,7 +82,6 @@ can_turn = False  # stopper for the turn button
 can_enemy_attack = False  # gives enemy attack if dead cards are black
 output_text_before_taking = False  # show text when mouse on the turn button
 stop_output_text_before_taking = False  # stop show text when mouse on the turn button
-d_image = None  # deck image
 deck_image = deck_full
 deck_image_empty = deck_empty
 deck_image_rect = deck_image.get_rect(midright=(width - width / 100, height // 4))
@@ -104,7 +103,7 @@ def testing():
 
 
 def deck_def(player, screen):
-    global take_card, deck_image, deck_image_rect, turn_took, can_turn, d_image, output_not_enough_space
+    global take_card, deck_image, deck_image_rect, turn_took, can_turn, output_not_enough_space, stop_output_text_before_taking, output_text_before_taking
     if len(cards.player_deck) != 0:
         if take_card and deck_image_rect.collidepoint(pygame.mouse.get_pos()) and not turn_took:
             if len(cards.player_hands) <= 10:
@@ -116,6 +115,9 @@ def deck_def(player, screen):
                 can_turn = True
     elif len(cards.player_deck) == 0:
         deck_image = deck_image_empty
+        can_turn = True
+        stop_output_text_before_taking = True
+        output_text_before_taking = False
     if deck_image_rect.collidepoint(pygame.mouse.get_pos()) and len(cards.player_deck) != 0:
         deck_image = deck_full_point
     if len(cards.player_hands) > 10 and deck_image_rect.collidepoint(pygame.mouse.get_pos()) \
@@ -148,19 +150,19 @@ def turn_button_def(screen):
         output_text_before_taking = False
 
 
-def battle(player_cards, enemy_cards, player, enemy):
+def battle(player, enemy):
     global turn_enemy, can_enemy_attack
-    if not turn_player:
+    # creating lists if cards on fields
+    field_cards_player = [0, 1, 2, 3]
+    field_cards_enemy = [0, 1, 2, 3]
+    for card, num in player.get_cards().items():
+        field_cards_player.remove(num)
+        field_cards_player.insert(num, card)
+    for card, num in enemy.get_cards().items():
+        field_cards_enemy.remove(num - 4)
+        field_cards_enemy.insert(num - 4, card)
 
-        # creating lists if cards on fields
-        field_cards_player = [0, 1, 2, 3]
-        field_cards_enemy = [0, 1, 2, 3]
-        for card, num in player_cards.items():
-            field_cards_player.remove(num)
-            field_cards_player.insert(num, card)
-        for card, num in enemy_cards.items():
-            field_cards_enemy.remove(num - 4)
-            field_cards_enemy.insert(num - 4, card)
+    if not turn_player:
 
         # player's turn
         for p_card in field_cards_player:
@@ -176,7 +178,6 @@ def battle(player_cards, enemy_cards, player, enemy):
 
         # enemy's turn
         if can_enemy_attack:
-            print(enemy_cards)
             for e_card in field_cards_enemy:
                 if type(e_card) != int:
                     for p_card in field_cards_player:

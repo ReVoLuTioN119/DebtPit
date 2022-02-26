@@ -1,1 +1,4 @@
 I'm just learning)
+
+I'm trying to make CCG using pygame
+I'll be glad to hear u're remarks

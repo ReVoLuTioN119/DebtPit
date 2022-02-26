@@ -41,9 +41,9 @@ def main():
         # game code
         controls.deck_def(player, screen)
         controls.turn_button_def(screen)
-        controls.battle(player.get_cards(), enemy.get_cards(), player, enemy)
         enemy.output(screen)
         player.output(screen)
+        controls.battle(player, enemy)
 
         # checking player's actions
         controls.capture_keyboard()
