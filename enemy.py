@@ -27,6 +27,16 @@ class Enemy:
         self.enemy_cards.append(random.choice(self.enemy_deck))
 
     def play_turn(self):
+        # delete card if it's hp is 0
+        for card in list(self.card_in_game):
+            if card.hp == 0:
+                self.free_fields.append(self.enemy_fields[self.card_in_game[card] - 4])
+                busy_field = self.card_in_game[card]
+                del self.card_in_game[card]
+                for field in self.enemy_fields:
+                    if field.num == busy_field:
+                        field.image = controls.field_image
+
         if controls.turn_enemy:
             if len(self.enemy_cards) != 0:
                 controls.can_turn = False
@@ -45,17 +55,7 @@ class Enemy:
             controls.turn_took = False
             controls.turn_enemy = False
             controls.turn_player = True
-
-        # delete card if it's hp is 0
-        for card in list(self.card_in_game):
-            if card.hp == 0:
-                self.free_fields.append(self.enemy_fields[self.card_in_game[card] - 4])
-                busy_field = self.card_in_game[card]
-                del self.card_in_game[card]
-                for field in self.enemy_fields:
-                    if field.num == busy_field:
-                        field.image = controls.field_image
-        controls.can_enemy_attack = True
+            controls.can_enemy_attack = True
 
     def output_fields(self, screen):
         for field in self.enemy_fields:
