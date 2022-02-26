@@ -1,4 +1,4 @@
-"""Game made by ReVoLuTioN"""
+"""Game made by ReVoLuTioN119"""
 
 # import libs
 import pygame
