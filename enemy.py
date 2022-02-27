@@ -53,16 +53,11 @@ class Enemy:
                         self.card_in_game[card] = put_field.num
             controls.take_card = True
             controls.turn_took = False
-            controls.turn_enemy = False
-            controls.turn_player = True
             controls.can_enemy_attack = True
 
     def output_fields(self, screen):
         for field in self.enemy_fields:
             field.output(screen, '', self.card_in_game)
-
-    def get_cards(self):
-        return self.card_in_game
 
     def output(self, screen):
         self.output_fields(screen)

@@ -76,8 +76,8 @@ turn_push = False  # was the turn button pushed
 turn_took = False  # was the card picked in that turn
 output_not_enough_space = False  # print if no space for new cards
 card_in_use = False  # remove correction card or not
-turn_enemy = True  # is it enemy's turn now
-turn_player = False  # is it player's turn now
+turn_enemy = False  # is it enemy's turn now
+turn_player = True  # is it player's turn now
 can_turn = False  # stopper for the turn button
 can_enemy_attack = False  # gives enemy attack if dead cards are black
 output_text_before_taking = False  # show text when mouse on the turn button
@@ -99,11 +99,13 @@ def testing():
     # print('turn_enemy - ', turn_enemy)
     # print('turn_player - ', turn_player)
     # print('can_turn - ', can_turn)
+    # print(can_enemy_attack)
     pass
 
 
 def deck_def(player, screen):
-    global take_card, deck_image, deck_image_rect, turn_took, can_turn, output_not_enough_space, stop_output_text_before_taking, output_text_before_taking
+    global take_card, deck_image, deck_image_rect, turn_took, can_turn, output_not_enough_space,\
+        stop_output_text_before_taking, output_text_before_taking
     if len(cards.player_deck) != 0:
         if take_card and deck_image_rect.collidepoint(pygame.mouse.get_pos()) and not turn_took:
             if len(cards.player_hands) <= 10:
@@ -151,18 +153,19 @@ def turn_button_def(screen):
 
 
 def battle(player, enemy):
-    global turn_enemy, can_enemy_attack
+    global turn_enemy, can_enemy_attack, turn_player
     # creating lists if cards on fields
     field_cards_player = [0, 1, 2, 3]
     field_cards_enemy = [0, 1, 2, 3]
-    for card, num in player.get_cards().items():
+    for card, num in player.card_in_game.items():
         field_cards_player.remove(num)
         field_cards_player.insert(num, card)
-    for card, num in enemy.get_cards().items():
+    for card, num in enemy.card_in_game.items():
         field_cards_enemy.remove(num - 4)
         field_cards_enemy.insert(num - 4, card)
 
     if not turn_player:
+        print('hop')
 
         # player's turn
         for p_card in field_cards_player:
@@ -181,12 +184,14 @@ def battle(player, enemy):
             for e_card in field_cards_enemy:
                 if type(e_card) != int:
                     for p_card in field_cards_player:
-                        if field_cards_enemy.index(e_card) == field_cards_player.index(p_card):
+                        if field_cards_enemy.index(e_card) == field_cards_player.index(p_card) and e_card.hp != 0:
                             if type(p_card) == int:
                                 player.reduce_hp(e_card.atk)
                             else:
                                 p_card.hp -= e_card.atk
             can_enemy_attack = False
+            turn_player = True
+            turn_enemy = False
 
 
 def capture_keyboard():
