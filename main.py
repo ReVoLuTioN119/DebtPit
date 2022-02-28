@@ -18,7 +18,7 @@ enemy = Enemy(cards.enemy_hands, fields.enemy_fields, cards.enemy_deck)
 
 def main():
     # configure pygame
-    screen = pygame.display.set_mode((controls.width, controls.height))
+    battle_screen = pygame.display.set_mode((controls.width, controls.height))
     if controls.fs:
         pygame.display.toggle_fullscreen()
     pygame.mouse.set_visible(False)
@@ -31,18 +31,18 @@ def main():
 
     while True:
         # background image
-        screen.blit(bg, (0, 0))
+        battle_screen.blit(bg, (0, 0))
 
         # FPS
         if controls.show_FPS:
             fps = font.render(str(int(clock.get_fps())), False, (0, 0, 0))
-            screen.blit(fps, (50, 0))
+            battle_screen.blit(fps, (50, 0))
 
         # game code
-        controls.deck_def(player, screen)
-        controls.turn_button_def(screen)
-        enemy.output(screen)
-        player.output(screen)
+        controls.deck_def(player, battle_screen)
+        controls.turn_button_def(battle_screen)
+        enemy.output(battle_screen)
+        player.output(battle_screen)
         controls.battle(player, enemy)
 
         # checking player's actions

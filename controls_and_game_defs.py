@@ -121,7 +121,7 @@ def testing():
     # print('turn_player - ', turn_player)
     # print('can_turn - ', can_turn)
     # print(can_enemy_attack)
-    print(cards.enemy_dead_cards, '\n', cards.player_dead_cards)
+    # print(cards.enemy_dead_cards, '\n', cards.player_dead_cards)
     pass
 
 
