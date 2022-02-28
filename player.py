@@ -37,6 +37,14 @@ class Player:
         screen.blit(hand_image, hand_image_rect)
 
     def output_cards(self, screen):
+        for card in list(self.card_in_game):       
+          if card.hp == 0:          
+            for field in self.player_fields:
+               if field.num == self.card_in_game[card]:
+                 field.image = controls.field_image 
+            cards.player_dead_cards.append(card)
+            del self.card_in_game[card]
+              
         # count card pos
         if len(self.deck) > 11:
             self.deck = self.deck[0:11]

@@ -1,6 +1,7 @@
 import random
 
 import controls_and_game_defs as controls
+from cards import enemy_dead_cards
 
 
 class Enemy:
@@ -32,6 +33,7 @@ class Enemy:
             if card.hp == 0:
                 self.free_fields.append(self.enemy_fields[self.card_in_game[card] - 4])
                 busy_field = self.card_in_game[card]
+                enemy_dead_cards.append(card)
                 del self.card_in_game[card]
                 for field in self.enemy_fields:
                     if field.num == busy_field:

@@ -50,7 +50,7 @@ def main():
 
         # updating pygame
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(30)
         controls.testing()
 
 
