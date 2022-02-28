@@ -86,6 +86,7 @@ arm_player_4 = pygame.transform.rotate(arm_enemy_4, 180)
 arm_player_5 = pygame.transform.rotate(arm_enemy_5, 180)
 
 # helpful args
+start_battle = False  # Did battle begin
 take_card = False  # was the left mouse button pressed
 card_show = False  # show card in hands on left click
 card_action = False  # stopper when sth is in process with cards
@@ -126,7 +127,7 @@ def testing():
 
 
 def deck_def(player, screen):
-    global take_card, deck_image, deck_image_rect, turn_took, can_turn, output_not_enough_space,\
+    global take_card, deck_image, deck_image_rect, turn_took, can_turn, output_not_enough_space, \
         stop_output_text_before_taking, output_text_before_taking
     if len(cards.player_deck) != 0:
         if take_card and deck_image_rect.collidepoint(
@@ -181,6 +182,7 @@ def turn_button_def(screen):
 
 def battle(player, enemy):
     global turn_enemy, can_enemy_attack, turn_player, can_player_attack
+
     # creating lists if cards on field
     field_cards_player = [0, 1, 2, 3]
     field_cards_enemy = [0, 1, 2, 3]
@@ -192,7 +194,8 @@ def battle(player, enemy):
         field_cards_enemy.insert(num - 4, card)
 
     if can_player_attack:
-      # player's turn
+
+        # player's turn
         for p_card in field_cards_player:
             if type(p_card) != int:
                 for e_card in field_cards_enemy:
@@ -205,7 +208,7 @@ def battle(player, enemy):
         can_player_attack = False
 
     if not turn_player:
-      
+
         turn_enemy = True
 
         # enemy's turn
@@ -215,7 +218,7 @@ def battle(player, enemy):
                     for p_card in field_cards_player:
                         if field_cards_enemy.index(
                                 e_card) == field_cards_player.index(
-                                    p_card) and e_card.hp != 0:
+                            p_card) and e_card.hp != 0:
                             if type(p_card) == int:
                                 player.reduce_hp(e_card.atk)
                             else:
@@ -225,7 +228,7 @@ def battle(player, enemy):
             turn_enemy = False
 
 
-def capture_keyboard():
+def capture_keyboard_battle():
     """Listening to player actions"""
     global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS
     for events in pygame.event.get():
