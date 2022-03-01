@@ -59,9 +59,17 @@ def main():
             '''Menu'''
             pygame.mouse.set_visible(True)
             main_menu.blit(bg_menu, (0, 0))
-            start_button = font.render('Start', False, (0, 0, 0))
+
+            # start button
+            start_button = font.render('New game', False, (0, 0, 0))
             start_button_rect = start_button.get_rect(center=(controls.width / 2, controls.height / 2))
             main_menu.blit(start_button, start_button_rect)
+
+            # continue button
+            # continue_button = font.render('Continue', False, (0, 0, 0))
+            # continue_button_rect = continue_button.get_rect(center=(controls.width / 2, controls.height / 2
+            #                                                         + (continue_button.get_height() * 2)))
+            # main_menu.blit(continue_button, continue_button_rect)
 
             for events in pygame.event.get():
                 if events.type == pygame.QUIT:
