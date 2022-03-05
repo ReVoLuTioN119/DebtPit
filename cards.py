@@ -70,27 +70,27 @@ class Card:
         screen.blit(self.hp_text, self.hp_text_rect)
 
 
-card1 = Card('kirril', 1, 2, '', controls.card_image, controls.cardd_show)
-card2 = Card('kirill1', 1, 2, '', controls.card_image, controls.cardd_show)
-card3 = Card('kirill2', 1, 2, '', controls.card_image, controls.cardd_show)
-card4 = Card('kirill3', 1, 2, '', controls.card_image, controls.cardd_show)
-card5 = Card('kirill4', 1, 2, '', controls.card_image, controls.cardd_show)
-card6 = Card('kirill5', 1, 2, '', controls.card_image, controls.cardd_show)
-card7 = Card('kirill6', 1, 2, '', controls.card_image, controls.cardd_show)
-card8 = Card('kirill7', 1, 2, '', controls.card_image, controls.cardd_show)
-card9 = Card('kirill8', 1, 2, '', controls.card_image, controls.cardd_show)
-card10 = Card('kirill9', 1, 2, '', controls.card_image, controls.cardd_show)
-card11 = Card('kirill0', 1, 2, '', controls.card_image, controls.cardd_show)
-card12 = Card('kirill00', 1, 2, '', controls.card_image, controls.cardd_show)
+card1 = Card('1', 1, 2, '', controls.card_image, controls.cardd_show)
+card2 = Card('2', 1, 2, '', controls.card_image, controls.cardd_show)
+card3 = Card('3', 1, 2, '', controls.card_image, controls.cardd_show)
+card4 = Card('4', 1, 2, '', controls.card_image, controls.cardd_show)
+card5 = Card('5', 1, 2, '', controls.card_image, controls.cardd_show)
+card6 = Card('6', 1, 2, '', controls.card_image, controls.cardd_show)
+card7 = Card('7', 1, 2, '', controls.card_image, controls.cardd_show)
+card8 = Card('8', 1, 2, '', controls.card_image, controls.cardd_show)
+card9 = Card('9', 1, 2, '', controls.card_image, controls.cardd_show)
+card10 = Card('0', 1, 2, '', controls.card_image, controls.cardd_show)
+card11 = Card('11', 1, 2, '', controls.card_image, controls.cardd_show)
+card12 = Card('12', 1, 2, '', controls.card_image, controls.cardd_show)
 card13 = Card('1', 1, 2, '', controls.card_image, controls.cardd_show)
 card14 = Card('2', 1, 3, '', controls.card_image, controls.cardd_show)
 card15 = Card('3', 1, 4, '', controls.card_image, controls.cardd_show)
 correct = Card('', '', '', '', controls.card_correct, '')
 
 all_cards = (card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12)
-player_deck = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11]
-enemy_deck = [card13, card15]
-player_hands = [card12]
-enemy_hands = [card14]
+player_deck = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12]
+enemy_deck = [card13, card14, card15]
+player_hands = []
+enemy_hands = []
 player_dead_cards = []
 enemy_dead_cards = []

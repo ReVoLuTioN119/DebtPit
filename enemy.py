@@ -63,6 +63,8 @@ class Enemy:
     def output_fields(self, screen):
         for field in self.enemy_fields:
             field.output(screen, '', self.card_in_game)
+            if controls.reset_player:
+                field.image = controls.field_image
 
     def output(self, screen):
         self.output_fields(screen)

@@ -30,6 +30,7 @@ class Player:
         for field in self.player_fields:
             field.output(screen, self.card_in_game)
 
+
     def output_hp_hand(self, screen):
         hand_image = eval('controls.arm_player_' + str(self.hp))
         hand_image_rect = hand_image.get_rect()
@@ -123,6 +124,25 @@ class Player:
 
     def get_cards(self):
         return self.card_in_game
+
+    def reset(self):
+        if controls.reset_player:
+            for dead in cards.player_dead_cards:
+                cards.player_deck.append(dead)
+            cards.player_dead_cards.clear()
+            for card in self.hold_card:
+                cards.player_deck.append(card)
+            self.hold_card.clear()
+            for card in self.card_in_game.keys():
+                cards.player_deck.append(card)
+            self.card_in_game.clear()
+            for card in cards.player_hands:
+                cards.player_deck.append(card)
+            cards.player_hands.clear()
+            for field in self.player_fields:
+                field.image = controls.field_image
+            self.__init__(self.deck, self.player_fields)
+        controls.reset_player = False
 
     def output(self, screen):
         self.output_fields(screen)

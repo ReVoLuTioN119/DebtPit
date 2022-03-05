@@ -118,6 +118,7 @@ can_enemy_attack = False  # gives enemy attack if dead cards are black
 can_player_attack = False  # gives player attack if he pushes turn button
 output_text_before_taking = False  # show text when mouse on the turn button
 stop_output_text_before_taking = False  # stop show text when mouse on the turn button
+reset_player = False  # set player to default
 deck_image = deck_full
 deck_image_empty = deck_empty
 deck_image_rect = deck_image.get_rect(midright=(width - width / 100, height // 4))
@@ -225,7 +226,8 @@ def card_battle(player, enemy):
 
 def battle_scene(battle_screen, player, enemy):
     global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS,\
-        stopper_battle_num, episode
+        stopper_battle_num, episode, turn_took, output_not_enough_space, card_in_use, turn_enemy, turn_player, can_turn,\
+        can_enemy_attack, can_player_attack, output_text_before_taking, stop_output_text_before_taking
     # background image
     battle_screen.blit(bg_battle, (0, 0))
     pygame.mouse.set_visible(False)
@@ -234,12 +236,30 @@ def battle_scene(battle_screen, player, enemy):
     deck_def(player, battle_screen)
     turn_button_def(battle_screen)
     enemy.output(battle_screen)
+    player.reset()
     player.output(battle_screen)
     card_battle(player, enemy)
 
     # check if enemy is dead
     if enemy.hp == 0:
         stopper_battle_num = True
+        take_card = False
+        card_show = False
+        card_action = False
+        hold_card = False
+        release_hold = True
+        turn_push = False
+        turn_took = False
+        output_not_enough_space = False
+        card_in_use = False
+        turn_enemy = False
+        turn_player = True
+        can_turn = False
+        can_enemy_attack = False
+        can_player_attack = False
+        output_text_before_taking = False
+        stop_output_text_before_taking = False
+        player.reset()
         episode = 'choose_battle'
 
     # checking player's actions
@@ -352,7 +372,7 @@ def story_scene(story_screen, font):
 
 
 def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
-    global episode, battle_num
+    global episode, battle_num, reset_player
     choose_battle_screen.blit(bg_choose_battle, (0, 0))
     pygame.mouse.set_visible(True)
     mouse = pygame.mouse.get_pos()
@@ -421,6 +441,7 @@ def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
             for events in pygame.event.get():
                 if events.type == pygame.MOUSEBUTTONDOWN:
                     if events.button == 1 and enemy == enemies[aval_battles.index(0)]:
+                        reset_player = True
                         episode = 'battle'
             text = font.render(enemy.name, False, (0, 0, 0))
             text_rect = text.get_rect(center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 2))
