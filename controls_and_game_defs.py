@@ -7,8 +7,10 @@ import random
 # screen params
 screen_help = pygame.display.set_mode((0, 0), pygame.HIDDEN)
 resolution = pygame.display.Info()
-width = 1000  # resolution.current_w
-height = 564  # resolution.current_h
+width = 1000
+height = 564
+# width = resolution.current_w
+# height = resolution.current_h
 correction_image = [1920 / width, 1080 / height]
 correction_mult = (1920 + 1080) / (width + height)
 fs = False
@@ -49,16 +51,20 @@ turn_button_raw = pygame.image.load('images/turn_button.png').convert()
 turn_button = pygame.transform.scale(
     turn_button_raw, (turn_button_raw.get_width() / correction_image[0],
                       turn_button_raw.get_height() / correction_image[1]))
-turn_button_point_raw = pygame.image.load(
-    'images/turn_button_point.png').convert()
+turn_button_point_raw = pygame.image.load('images/turn_button_point.png').convert()
 turn_button_point = pygame.transform.scale(
     turn_button_point_raw,
     (turn_button_point_raw.get_width() / correction_image[0],
      turn_button_point_raw.get_height() / correction_image[1]))
+enemy_image_raw = pygame.image.load('images/enemy_pict.png').convert_alpha()
+enemy_image = pygame.transform.scale(enemy_image_raw, (enemy_image_raw.get_width() / correction_image[0],
+                                                       enemy_image_raw.get_height() / correction_image[1]))
+boss_image_raw = pygame.image.load('images/boss_pict.png').convert_alpha()
+boss_image = pygame.transform.scale(boss_image_raw, (boss_image_raw.get_width() / correction_image[0],
+                                                     boss_image_raw.get_height() / correction_image[1]))
 arm_enemy_5_raw = pygame.image.load('images/arm/arm_5.png').convert_alpha()
-arm_enemy_5 = pygame.transform.scale(
-    arm_enemy_5_raw, ((arm_enemy_5_raw.get_width() / correction_image[0]),
-                      (arm_enemy_5_raw.get_height() / correction_image[1])))
+arm_enemy_5 = pygame.transform.scale(arm_enemy_5_raw, ((arm_enemy_5_raw.get_width() / correction_image[0]),
+                                                       (arm_enemy_5_raw.get_height() / correction_image[1])))
 arm_enemy_4_raw = pygame.image.load('images/arm/arm_4.png').convert_alpha()
 arm_enemy_4 = pygame.transform.scale(
     arm_enemy_4_raw, ((arm_enemy_4_raw.get_width() / correction_image[0]),
@@ -86,13 +92,16 @@ arm_player_3 = pygame.transform.rotate(arm_enemy_3, 180)
 arm_player_4 = pygame.transform.rotate(arm_enemy_4, 180)
 arm_player_5 = pygame.transform.rotate(arm_enemy_5, 180)
 bg_menu = pygame.image.load('images/menu.jpg').convert()
-bg_battle = pygame.image.load('images/bg.jpg').convert()
+bg_battle = pygame.image.load('images/bg_battle_scene.jpg').convert()
 bg_story = pygame.image.load('images/story.jpg').convert()
+bg_choose_battle = pygame.image.load('images/bg_choose_battle.jpg').convert()
 
 # helpful args
+battle_num = 0  # amount of battles, managing enemies
 episode = 'menu'  # what screen is now
 pressed_timer = 0  # time after pressing 'new game' button
-have_saved_game = False  # is there save
+stopper_battle_num = True  # stops adding to battle_num
+have_saved_game = False  # is there saved game
 take_card = False  # was the left mouse button pressed
 card_show = False  # show card in hands on left click
 card_action = False  # stopper when sth is in process with cards
@@ -299,26 +308,101 @@ def main_menu_scene(main_menu, font):
         if events.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(pygame.mouse.get_pos()):
                 pressed_timer = pygame.time.get_ticks()
-                episode = 'story'
+                episode = 'choose_battle'
             elif continue_button_rect.collidepoint(pygame.mouse.get_pos()) and have_saved_game:
-                episode = 'battle'
+                pass
             elif exit_button_rect.collidepoint(pygame.mouse.get_pos()):
                 sys.exit()
 
 
 def story_scene(story_screen, font):
     # story
+    next_text = pygame.time.get_ticks()
     pygame.mouse.set_visible(False)
     story_screen.blit(bg_story, (0, 0))
     story_text1 = font.render('This story began when you got into debt,', False, (0, 0, 0))
     story_text1_rect = story_text1.get_rect(center=(width / 2 - story_text1.get_height(),
                                                     height / 2 - story_text1.get_height()))
-    story_text2 = font.render('which you are not able to pay off', False, (0, 0, 0))
+    story_text2 = font.render('which you are not able to pay off.', False, (0, 0, 0))
     story_text2_rect = story_text2.get_rect(center=(width / 2 + (story_text2.get_height() * 2),
                                                     height / 2 + story_text2.get_height()))
-    story_screen.blit(story_text1, story_text1_rect)
-    story_screen.blit(story_text2, story_text2_rect)
+    story_text3 = font.render('Lender will forgive you the debt if you win it at card game.', False, (0, 0, 0))
+    story_text3_rect = story_text3.get_rect(center=(width / 2, height / 2 - story_text3.get_height()))
+    story_text4 = font.render("That is why you have to play with his companions", False, (0, 0, 0))
+    story_text4_rect = story_text4.get_rect(center=(width / 2, height / 2 + story_text3.get_height()))
+    story_text5 = font.render("to improve your skills.", False, (0, 0, 0))
+    story_text5_rect = story_text5.get_rect(center=(width / 2, height / 2 + (story_text3.get_height() * 2)))
+    story_text6 = font.render("Defeat everyone to reach lender.", False, (0, 0, 0))
+    story_text6_rect = story_text6.get_rect(center=(width / 2, height / 2 + (story_text3.get_height() * 4)))
+
+    if next_text - pressed_timer <= 5000:
+        story_screen.blit(story_text1, story_text1_rect)
+        story_screen.blit(story_text2, story_text2_rect)
+    elif next_text - pressed_timer <= 10000:
+        story_screen.blit(story_text3, story_text3_rect)
+        story_screen.blit(story_text4, story_text4_rect)
+        story_screen.blit(story_text5, story_text5_rect)
+        story_screen.blit(story_text6, story_text6_rect)
 
 
+def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
+    choose_battle_screen.blit(bg_choose_battle, (0, 0))
+    mouse = pygame.mouse.get_pos()
 
+    # transparent block at left
+    info_block = pygame.Surface((width / 5, height), pygame.SRCALPHA).convert_alpha()
+    info_block.fill((0, 0, 0, 50))
+    info_block_rect = info_block.get_rect(topleft=(0, 0))
+    choose_battle_screen.blit(info_block, info_block_rect)
 
+    # checklist
+    head = font.render('Checklist', False, (0, 0, 0))
+    head_rect = head.get_rect()
+    head_rect.midtop = info_block_rect.midtop
+    head_rect.y += head.get_height()
+    choose_battle_screen.blit(head, head_rect)
+    underline = font.render('---------', False, (0, 0, 0))
+    underline_rect = underline.get_rect()
+    underline_rect.midtop = info_block_rect.midtop
+    underline_rect.y += head.get_height() * 2
+    choose_battle_screen.blit(underline, underline_rect)
+
+    # title
+    title = font.render('Choose your enemy', False, (0, 0, 0))
+    title_rect = title.get_rect(center=(width / 2 + info_block.get_width() / 2, height / 15))
+    choose_battle_screen.blit(title, title_rect)
+
+    # names
+    n = 0
+    for enemy in bosses:
+        name = font.render(enemy.name, False, (0, 0, 0))
+        name_rect = name.get_rect()
+        name_rect.midtop = info_block_rect.midtop
+        name_rect.y += (head.get_height() * 5) + (name.get_height() * n * 2)
+        choose_battle_screen.blit(name, name_rect)
+        n += 1
+
+    # tiles
+    t = 0
+    for enemy in enemies:
+        if battle_num == 0:
+            enemy_image_ = enemy.image
+            enemy_image_rect = enemy_image_.get_rect(
+                center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 3))
+            if enemy_image_rect.collidepoint(mouse):
+                text = font.render(enemy.name, False, (0, 0, 0))
+                text_rect = text.get_rect(center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 2))
+                description = font.render(enemy.description, False, (0, 0, 0))
+                description_rect = description.get_rect(center=(width / 2 + info_block.get_width() / 2, height / 1.3))
+                choose_battle_screen.blit(text, text_rect)
+                choose_battle_screen.blit(description, description_rect)
+            choose_battle_screen.blit(enemy_image_, enemy_image_rect)
+        t += 1
+
+    for events in pygame.event.get():
+        '''Exiting'''
+        if events.type == pygame.QUIT:
+            sys.exit()
+        if events.type == pygame.KEYDOWN:
+            if events.key == pygame.K_ESCAPE:
+                sys.exit()

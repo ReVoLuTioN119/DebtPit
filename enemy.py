@@ -5,7 +5,10 @@ from cards import enemy_dead_cards
 
 
 class Enemy:
-    def __init__(self, enemy_cards, enemy_fields, enemy_deck):
+    def __init__(self, enemy_cards, enemy_fields, enemy_deck, name, image, description):
+        self.name = name
+        self.description = description
+        self.image = image
         self.hp = 5
         self.enemy_cards = enemy_cards
         self.enemy_fields = enemy_fields
