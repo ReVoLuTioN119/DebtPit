@@ -16,8 +16,7 @@ class Field:
             self.image_rect = self.image.get_rect(
                 bottomleft=(
                     controls.width // 5.82 + ((self.image.get_width() + (controls.width / 21.3)) * (self.num - 4)),
-                    controls.height / 3.1)
-            )
+                    controls.height / 3.1))
 
     def output(self, screen, player_cards='', enemy_cards=''):
         screen.blit(self.image, self.image_rect)
@@ -40,10 +39,8 @@ class Field:
         if enemy_cards != '':
             if len(enemy_cards) != 0:
                 for card in enemy_cards.keys():
-                    rect = self.image.get_rect(bottomleft=(
-                        (controls.width / 5.84) + ((controls.width / 6.09) * (int(enemy_cards[card]) - 4)),
-                        controls.height / 3.1)
-                    )
+                    rect = self.image.get_rect(bottomleft=((controls.width / 5.84) + ((controls.width / 6.09) *
+                                                                (int(enemy_cards[card]) - 4)), controls.height / 3.1))
                     card.stats(screen, rect.bottomright, rect.bottomleft, rect.midtop)
                     for num in enemy_cards.values():
                         if self.num == num:

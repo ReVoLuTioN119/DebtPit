@@ -1,13 +1,14 @@
 import pygame
 import sys
+
 import cards
 import random
 
-# resolution
+# screen params
 screen_help = pygame.display.set_mode((0, 0), pygame.HIDDEN)
 resolution = pygame.display.Info()
-width = resolution.current_w
-height = resolution.current_h
+width = 1000  # resolution.current_w
+height = 564  # resolution.current_h
 correction_image = [1920 / width, 1080 / height]
 correction_mult = (1920 + 1080) / (width + height)
 fs = False
@@ -84,9 +85,11 @@ arm_player_2 = pygame.transform.rotate(arm_enemy_2, 180)
 arm_player_3 = pygame.transform.rotate(arm_enemy_3, 180)
 arm_player_4 = pygame.transform.rotate(arm_enemy_4, 180)
 arm_player_5 = pygame.transform.rotate(arm_enemy_5, 180)
+bg_menu = pygame.image.load('images/menu.jpg').convert()
+bg_battle = pygame.image.load('images/bg.jpg').convert()
 
 # helpful args
-start_battle = False  # Did battle begin
+episode = 'menu'  # what screen is now
 take_card = False  # was the left mouse button pressed
 card_show = False  # show card in hands on left click
 card_action = False  # stopper when sth is in process with cards
@@ -107,23 +110,6 @@ deck_image = deck_full
 deck_image_empty = deck_empty
 deck_image_rect = deck_image.get_rect(midright=(width - width / 100,
                                                 height // 4))
-
-
-def testing():
-    # print('\n' * 50)
-    # print('take_card - ', take_card)
-    # print('card_action - ', card_action)
-    # print('hold_card - ', hold_card)
-    # print('release_hold - ', release_hold)
-    # print('turn_push - ', turn_push)
-    # print('turn_took - ', turn_took)
-    # print('card_in_use - ', card_in_use)
-    # print('turn_enemy - ', turn_enemy)
-    # print('turn_player - ', turn_player)
-    # print('can_turn - ', can_turn)
-    # print(can_enemy_attack)
-    # print(cards.enemy_dead_cards, '\n', cards.player_dead_cards)
-    pass
 
 
 def deck_def(player, screen):
@@ -180,7 +166,7 @@ def turn_button_def(screen):
         output_text_before_taking = False
 
 
-def battle(player, enemy):
+def card_battle(player, enemy):
     global turn_enemy, can_enemy_attack, turn_player, can_player_attack
 
     # creating lists if cards on field
@@ -217,8 +203,7 @@ def battle(player, enemy):
                 if type(e_card) != int:
                     for p_card in field_cards_player:
                         if field_cards_enemy.index(
-                                e_card) == field_cards_player.index(
-                            p_card) and e_card.hp != 0:
+                                e_card) == field_cards_player.index(p_card) and e_card.hp != 0:
                             if type(p_card) == int:
                                 player.reduce_hp(e_card.atk)
                             else:
@@ -228,9 +213,20 @@ def battle(player, enemy):
             turn_enemy = False
 
 
-def capture_keyboard_battle():
-    """Listening to player actions"""
+def battle_scene(battle_screen, player, enemy):
     global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS
+    # background image
+    battle_screen.blit(bg_battle, (0, 0))
+    pygame.mouse.set_visible(False)
+
+    # game code
+    deck_def(player, battle_screen)
+    turn_button_def(battle_screen)
+    enemy.output(battle_screen)
+    player.output(battle_screen)
+    card_battle(player, enemy)
+
+    # checking player's actions
     for events in pygame.event.get():
         '''Exiting'''
         if events.type == pygame.QUIT:
@@ -261,3 +257,44 @@ def capture_keyboard_battle():
             if events.button == 1:
                 release_hold = True
                 turn_push = False
+
+
+def main_menu_scene(main_menu, font):
+    global episode
+    pygame.mouse.set_visible(True)
+    main_menu.blit(bg_menu, (0, 0))
+
+    # start button
+    start_button = font.render('New game', False, (0, 0, 0))
+    start_button_rect = start_button.get_rect(center=(width / 2, height / 2
+                                                      - (start_button.get_height() * 3)))
+    main_menu.blit(start_button, start_button_rect)
+
+    # continue button
+    continue_button = font.render('Continue', False, (0, 0, 0))
+    continue_button_rect = continue_button.get_rect(center=(width / 2,
+                                                            height / 2 - continue_button.get_height()))
+    main_menu.blit(continue_button, continue_button_rect)
+
+    # settings button
+    settings_button = font.render('Settings', False, (0, 0, 0))
+    settings_button_rect = settings_button.get_rect(center=(width / 2,
+                                                            height / 2 + settings_button.get_height()))
+    main_menu.blit(settings_button, settings_button_rect)
+
+    # exit button
+    exit_button = font.render('Exit', False, (0, 0, 0))
+    exit_button_rect = exit_button.get_rect(center=(width / 2, height / 2
+                                                    + (exit_button.get_height() * 3)))
+    main_menu.blit(exit_button, exit_button_rect)
+
+    for events in pygame.event.get():
+        if events.type == pygame.QUIT:
+            sys.exit()
+        if events.type == pygame.MOUSEBUTTONDOWN:
+            if start_button_rect.collidepoint(pygame.mouse.get_pos()):
+                episode = 'beginning'
+            elif continue_button_rect.collidepoint(pygame.mouse.get_pos()):
+                episode = 'battle'
+            elif exit_button_rect.collidepoint(pygame.mouse.get_pos()):
+                sys.exit()
