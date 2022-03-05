@@ -14,34 +14,34 @@ from enemy import Enemy
 pygame.init()
 player = Player(cards.player_hands, player_fields)
 enemy1 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Frunk Cosello', controls.boss_image, 'description')
-companion1 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Thomas Dyson', controls.enemy_image, 'description')
-companion2 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Daniel Hancock', controls.enemy_image, 'description')
-companion3 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Justine Baker', controls.enemy_image, 'description')
+companion6 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Thomas Dyson', controls.enemy_image, 'description')
+companion7 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Daniel Hancock', controls.enemy_image, 'description')
+companion8 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Justine Baker', controls.enemy_image, 'description')
 enemy2 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Jack Emerald', controls.boss_image, 'description')
-companion4 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Adam Carter', controls.enemy_image, 'description')
-companion5 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Gareth Babcock', controls.enemy_image, 'description')
-companion6 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Lewis Clapton', controls.enemy_image, 'description')
+companion9 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Adam Carter', controls.enemy_image, 'description')
+companion10 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Gareth Babcock', controls.enemy_image, 'description')
+companion11 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Lewis Clapton', controls.enemy_image, 'description')
 enemy3 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'John Fotty', controls.boss_image, 'description')
-companion7 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Zhess Campbell', controls.enemy_image, 'description')
-companion8 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'James Flannagan', controls.enemy_image, 'description')
-companion9 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Miguel Brooks', controls.enemy_image, 'description')
+companion12 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Zhess Campbell', controls.enemy_image, 'description')
+companion13 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'James Flannagan', controls.enemy_image, 'description')
+companion14 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Miguel Brooks', controls.enemy_image, 'description')
 enemy4 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Frunk Simarta', controls.boss_image, 'description')
-companion10 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'James Freeman', controls.enemy_image, 'description')
-companion11 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Jeremiah Galbraith', controls.enemy_image, 'description')
-companion12 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Cameron Jones', controls.enemy_image, 'description')
+companion15 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'James Freeman', controls.enemy_image, 'description')
+companion16 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Jeremiah Galbraith', controls.enemy_image, 'description')
+companion17 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Cameron Jones', controls.enemy_image, 'description')
 enemy5 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Harvard Capcone', controls.boss_image, 'description')
-companion13 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Stephen Williams', controls.enemy_image, 'description')
-companion14 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Charles Galbraith', controls.enemy_image, 'description')
-companion15 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Robbie Campbell', controls.enemy_image, 'description')
+companion18 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Stephen Williams', controls.enemy_image, 'description')
+companion19 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Charles Galbraith', controls.enemy_image, 'description')
+companion20 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Robbie Campbell', controls.enemy_image, 'description')
 boss = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Don Corneone', controls.boss_image, 'description')
-companion16 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Consiglieri', controls.enemy_image, 'description')
+companion21 = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck, 'Consiglieri', controls.enemy_image, 'description')
 bosses = [enemy1, enemy2, enemy3, enemy4, enemy5, boss]
-enemies0 = [companion1, companion2, companion3, enemy1]
-enemies1 = [companion4, companion5, companion6, enemy2]
-enemies2 = [companion7, companion8, companion9, enemy3]
-enemies3 = [companion10, companion11, companion12, enemy4]
-enemies4 = [companion13, companion14, companion15, enemy5]
-enemies5 = [companion16, boss]
+enemies0 = [companion6, companion7, companion8, enemy1]
+enemies1 = [companion9, companion10, companion11, enemy2]
+enemies2 = [companion12, companion13, companion14, enemy3]
+enemies3 = [companion15, companion16, companion17, enemy4]
+enemies4 = [companion18, companion19, companion20, enemy5]
+enemies5 = [companion21, boss]
 
 
 def main():
@@ -67,7 +67,12 @@ def main():
             if controls.stopper_battle_num:
                 controls.battle_num += 1
                 controls.stopper_battle_num = False
-            eval('controls.battle_scene(battle_screen, player, enemy' + str(controls.battle_num) + ')')
+            if controls.battle_num < 6:
+                eval('controls.battle_scene(battle_screen, player, enemy' + str(controls.battle_num) + ')')
+            elif controls.battle_num < 22:
+                eval('controls.battle_scene(battle_screen, player, companion' + str(controls.battle_num) + ')')
+            else:
+                eval('controls.battle_scene(battle_screen, player, boss)')
 
         # menu
         elif controls.episode == 'menu':

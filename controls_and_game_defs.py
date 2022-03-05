@@ -224,7 +224,8 @@ def card_battle(player, enemy):
 
 
 def battle_scene(battle_screen, player, enemy):
-    global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS
+    global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS,\
+        stopper_battle_num, episode
     # background image
     battle_screen.blit(bg_battle, (0, 0))
     pygame.mouse.set_visible(False)
@@ -235,6 +236,11 @@ def battle_scene(battle_screen, player, enemy):
     enemy.output(battle_screen)
     player.output(battle_screen)
     card_battle(player, enemy)
+
+    # check if enemy is dead
+    if enemy.hp == 0:
+        stopper_battle_num = True
+        episode = 'choose_battle'
 
     # checking player's actions
     for events in pygame.event.get():
@@ -346,8 +352,31 @@ def story_scene(story_screen, font):
 
 
 def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
+    global episode, battle_num
     choose_battle_screen.blit(bg_choose_battle, (0, 0))
+    pygame.mouse.set_visible(True)
     mouse = pygame.mouse.get_pos()
+    if len(enemies) == 4:
+        aval_battles = [1, 1, 1, 1]
+        if battle_num <= 3:
+            aval_battles[battle_num] = 0
+        elif 4 <= battle_num <= 7:
+            battle_num -= 4
+            aval_battles[battle_num] = 0
+        elif 8 <= battle_num <= 11:
+            battle_num -= 8
+            aval_battles[battle_num] = 0
+        elif 12 <= battle_num <= 15:
+            battle_num -= 12
+            aval_battles[battle_num] = 0
+        elif 16 <= battle_num <= 19:
+            battle_num -= 16
+            aval_battles[battle_num] = 0
+    else:
+        aval_battles = [1, 1]
+        if 20 <= battle_num <= 21:
+            battle_num -= 20
+            aval_battles[battle_num] = 0
 
     # transparent block at left
     info_block = pygame.Surface((width / 5, height), pygame.SRCALPHA).convert_alpha()
@@ -385,18 +414,21 @@ def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
     # tiles
     t = 0
     for enemy in enemies:
-        if battle_num == 0:
-            enemy_image_ = enemy.image
-            enemy_image_rect = enemy_image_.get_rect(
-                center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 3))
-            if enemy_image_rect.collidepoint(mouse):
-                text = font.render(enemy.name, False, (0, 0, 0))
-                text_rect = text.get_rect(center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 2))
-                description = font.render(enemy.description, False, (0, 0, 0))
-                description_rect = description.get_rect(center=(width / 2 + info_block.get_width() / 2, height / 1.3))
-                choose_battle_screen.blit(text, text_rect)
-                choose_battle_screen.blit(description, description_rect)
-            choose_battle_screen.blit(enemy_image_, enemy_image_rect)
+        enemy_image_ = enemy.image
+        enemy_image_rect = enemy_image_.get_rect(
+            center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 3))
+        if enemy_image_rect.collidepoint(mouse):
+            for events in pygame.event.get():
+                if events.type == pygame.MOUSEBUTTONDOWN:
+                    if events.button == 1 and enemy == enemies[aval_battles.index(0)]:
+                        episode = 'battle'
+            text = font.render(enemy.name, False, (0, 0, 0))
+            text_rect = text.get_rect(center=(width / 3 + (enemy_image_.get_height() * 1.75 * t), height / 2))
+            description = font.render(enemy.description, False, (0, 0, 0))
+            description_rect = description.get_rect(center=(width / 2 + info_block.get_width() / 2, height / 1.3))
+            choose_battle_screen.blit(text, text_rect)
+            choose_battle_screen.blit(description, description_rect)
+        choose_battle_screen.blit(enemy_image_, enemy_image_rect)
         t += 1
 
     for events in pygame.event.get():
