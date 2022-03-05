@@ -87,9 +87,12 @@ arm_player_4 = pygame.transform.rotate(arm_enemy_4, 180)
 arm_player_5 = pygame.transform.rotate(arm_enemy_5, 180)
 bg_menu = pygame.image.load('images/menu.jpg').convert()
 bg_battle = pygame.image.load('images/bg.jpg').convert()
+bg_story = pygame.image.load('images/story.jpg').convert()
 
 # helpful args
 episode = 'menu'  # what screen is now
+pressed_timer = 0  # time after pressing 'new game' button
+have_saved_game = False  # is there save
 take_card = False  # was the left mouse button pressed
 card_show = False  # show card in hands on left click
 card_action = False  # stopper when sth is in process with cards
@@ -108,8 +111,7 @@ output_text_before_taking = False  # show text when mouse on the turn button
 stop_output_text_before_taking = False  # stop show text when mouse on the turn button
 deck_image = deck_full
 deck_image_empty = deck_empty
-deck_image_rect = deck_image.get_rect(midright=(width - width / 100,
-                                                height // 4))
+deck_image_rect = deck_image.get_rect(midright=(width - width / 100, height // 4))
 
 
 def deck_def(player, screen):
@@ -185,8 +187,7 @@ def card_battle(player, enemy):
         for p_card in field_cards_player:
             if type(p_card) != int:
                 for e_card in field_cards_enemy:
-                    if field_cards_player.index(
-                            p_card) == field_cards_enemy.index(e_card):
+                    if field_cards_player.index(p_card) == field_cards_enemy.index(e_card):
                         if type(e_card) == int:
                             enemy.reduce_hp(p_card.atk)
                         else:
@@ -260,32 +261,36 @@ def battle_scene(battle_screen, player, enemy):
 
 
 def main_menu_scene(main_menu, font):
-    global episode
+    global episode, pressed_timer
     pygame.mouse.set_visible(True)
     main_menu.blit(bg_menu, (0, 0))
+    mouse = pygame.mouse.get_pos()
 
     # start button
     start_button = font.render('New game', False, (0, 0, 0))
-    start_button_rect = start_button.get_rect(center=(width / 2, height / 2
-                                                      - (start_button.get_height() * 3)))
+    start_button_rect = start_button.get_rect(center=(width / 2, height / 2 - (start_button.get_height() * 2)))
+    if start_button_rect.collidepoint(mouse):
+        start_button = pygame.transform.scale2x(start_button)
+        start_button_rect = start_button.get_rect(center=(width / 2, height / 2 - (start_button.get_height())))
     main_menu.blit(start_button, start_button_rect)
 
     # continue button
-    continue_button = font.render('Continue', False, (0, 0, 0))
-    continue_button_rect = continue_button.get_rect(center=(width / 2,
-                                                            height / 2 - continue_button.get_height()))
+    if have_saved_game:
+        continue_button = font.render('Continue', False, (0, 0, 0))
+    else:
+        continue_button = font.render('Continue', False, (128, 128, 128))
+    continue_button_rect = continue_button.get_rect(center=(width / 2, height / 2))
+    if continue_button_rect.collidepoint(mouse) and have_saved_game:
+        continue_button = pygame.transform.scale2x(continue_button)
+        continue_button_rect = continue_button.get_rect(center=(width / 2, height / 2))
     main_menu.blit(continue_button, continue_button_rect)
-
-    # settings button
-    settings_button = font.render('Settings', False, (0, 0, 0))
-    settings_button_rect = settings_button.get_rect(center=(width / 2,
-                                                            height / 2 + settings_button.get_height()))
-    main_menu.blit(settings_button, settings_button_rect)
 
     # exit button
     exit_button = font.render('Exit', False, (0, 0, 0))
-    exit_button_rect = exit_button.get_rect(center=(width / 2, height / 2
-                                                    + (exit_button.get_height() * 3)))
+    exit_button_rect = exit_button.get_rect(center=(width / 2, height / 2 + (exit_button.get_height() * 2)))
+    if exit_button_rect.collidepoint(mouse):
+        exit_button = pygame.transform.scale2x(exit_button)
+        exit_button_rect = exit_button.get_rect(center=(width / 2, height / 2 + (exit_button.get_height())))
     main_menu.blit(exit_button, exit_button_rect)
 
     for events in pygame.event.get():
@@ -293,8 +298,27 @@ def main_menu_scene(main_menu, font):
             sys.exit()
         if events.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(pygame.mouse.get_pos()):
-                episode = 'beginning'
-            elif continue_button_rect.collidepoint(pygame.mouse.get_pos()):
+                pressed_timer = pygame.time.get_ticks()
+                episode = 'story'
+            elif continue_button_rect.collidepoint(pygame.mouse.get_pos()) and have_saved_game:
                 episode = 'battle'
             elif exit_button_rect.collidepoint(pygame.mouse.get_pos()):
                 sys.exit()
+
+
+def story_scene(story_screen, font):
+    # story
+    pygame.mouse.set_visible(False)
+    story_screen.blit(bg_story, (0, 0))
+    story_text1 = font.render('This story began when you got into debt,', False, (0, 0, 0))
+    story_text1_rect = story_text1.get_rect(center=(width / 2 - story_text1.get_height(),
+                                                    height / 2 - story_text1.get_height()))
+    story_text2 = font.render('which you are not able to pay off', False, (0, 0, 0))
+    story_text2_rect = story_text2.get_rect(center=(width / 2 + (story_text2.get_height() * 2),
+                                                    height / 2 + story_text2.get_height()))
+    story_screen.blit(story_text1, story_text1_rect)
+    story_screen.blit(story_text2, story_text2_rect)
+
+
+
+

@@ -17,9 +17,12 @@ enemy = Enemy(cards.enemy_hands, enemy_fields, cards.enemy_deck)
 
 
 def main():
-    # configure pygame
+    # screens
     battle_screen = pygame.display.set_mode((controls.width, controls.height))
     menu_screen = pygame.display.set_mode((controls.width, controls.height))
+    story_screen = pygame.display.set_mode((controls.width, controls.height))
+
+    # configure pygame
     if controls.fs:
         pygame.display.toggle_fullscreen()
     pygame.display.set_caption('Gold card')
@@ -38,6 +41,13 @@ def main():
         elif controls.episode == 'menu':
             '''Menu'''
             controls.main_menu_scene(menu_screen, font)
+
+        # story
+        elif controls.episode == 'story':
+            controls.story_scene(story_screen, font)
+            now = pygame.time.get_ticks()
+            if now - controls.pressed_timer >= 5000:
+                controls.episode = 'battle'
 
         # FPS
         if controls.show_FPS:
