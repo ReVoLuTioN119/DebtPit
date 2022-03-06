@@ -82,12 +82,24 @@ def main():
         elif controls.episode == 'story':
             controls.story_scene(story_screen, font)
             close = pygame.time.get_ticks()
-            if close - controls.pressed_timer >= 15000:
+            if close - controls.pressed_timer >= 10000:
                 controls.episode = 'choose_battle'
 
         # choose enemy
         elif controls.episode == 'choose_battle':
-            eval('controls.choose_battle_scene(choose_battle_screen, font, bosses, enemies' + str(controls.battle_num) + ')')
+            if controls.battle_num <= 3:
+                controls.enemy_order = 0
+            elif controls.battle_num <= 7:
+                controls.enemy_order = 1
+            elif controls.battle_num <= 11:
+                controls.enemy_order = 2
+            elif controls.battle_num <= 15:
+                controls.enemy_order = 3
+            elif controls.battle_num <= 19:
+                controls.enemy_order = 4
+            else:
+                controls.enemy_order = 5
+            eval('controls.choose_battle_scene(choose_battle_screen, font, bosses, enemies' + str(controls.enemy_order) + ')')
 
         # FPS
         if controls.show_FPS:

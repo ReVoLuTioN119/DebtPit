@@ -102,6 +102,7 @@ episode = 'menu'  # what screen is now
 pressed_timer = 0  # time after pressing 'new game' button
 stopper_battle_num = True  # stops adding to battle_num
 have_saved_game = False  # is there saved game
+enemy_order = 0  # what order of enemies is now (what list is using)
 take_card = False  # was the left mouse button pressed
 card_show = False  # show card in hands on left click
 card_action = False  # stopper when sth is in process with cards
@@ -226,8 +227,8 @@ def card_battle(player, enemy):
 
 def battle_scene(battle_screen, player, enemy):
     global take_card, card_show, card_action, deck_image, hold_card, release_hold, turn_push, show_FPS,\
-        stopper_battle_num, episode, turn_took, output_not_enough_space, card_in_use, turn_enemy, turn_player, can_turn,\
-        can_enemy_attack, can_player_attack, output_text_before_taking, stop_output_text_before_taking
+        stopper_battle_num, episode, turn_took, output_not_enough_space, card_in_use, turn_enemy, turn_player,\
+        can_turn, can_enemy_attack, can_player_attack, output_text_before_taking, stop_output_text_before_taking
     # background image
     battle_screen.blit(bg_battle, (0, 0))
     pygame.mouse.set_visible(False)
@@ -334,7 +335,7 @@ def main_menu_scene(main_menu, font):
         if events.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(pygame.mouse.get_pos()):
                 pressed_timer = pygame.time.get_ticks()
-                episode = 'choose_battle'
+                episode = 'story'
             elif continue_button_rect.collidepoint(pygame.mouse.get_pos()) and have_saved_game:
                 pass
             elif exit_button_rect.collidepoint(pygame.mouse.get_pos()):
@@ -376,27 +377,28 @@ def choose_battle_scene(choose_battle_screen, font, bosses, enemies):
     choose_battle_screen.blit(bg_choose_battle, (0, 0))
     pygame.mouse.set_visible(True)
     mouse = pygame.mouse.get_pos()
+    correction = battle_num  # correct index
     if len(enemies) == 4:
         aval_battles = [1, 1, 1, 1]
-        if battle_num <= 3:
-            aval_battles[battle_num] = 0
-        elif 4 <= battle_num <= 7:
-            battle_num -= 4
-            aval_battles[battle_num] = 0
-        elif 8 <= battle_num <= 11:
-            battle_num -= 8
-            aval_battles[battle_num] = 0
-        elif 12 <= battle_num <= 15:
-            battle_num -= 12
-            aval_battles[battle_num] = 0
-        elif 16 <= battle_num <= 19:
-            battle_num -= 16
-            aval_battles[battle_num] = 0
+        if correction <= 3:
+            aval_battles[correction] = 0
+        elif 4 <= correction <= 7:
+            correction -= 4
+            aval_battles[correction] = 0
+        elif 8 <= correction <= 11:
+            correction -= 8
+            aval_battles[correction] = 0
+        elif 12 <= correction <= 15:
+            correction -= 12
+            aval_battles[correction] = 0
+        elif 16 <= correction <= 19:
+            correction -= 16
+            aval_battles[correction] = 0
     else:
         aval_battles = [1, 1]
-        if 20 <= battle_num <= 21:
-            battle_num -= 20
-            aval_battles[battle_num] = 0
+        if 20 <= correction <= 21:
+            correction -= 20
+            aval_battles[correction] = 0
 
     # transparent block at left
     info_block = pygame.Surface((width / 5, height), pygame.SRCALPHA).convert_alpha()
